@@ -3,19 +3,44 @@
 #include <fstream>
 #include <map>
 #include <vector>
-#include "includes\nlohmann\json.hpp"
+#include "includes/nlohmann/json.hpp"
 
 using namespace std;
 using json = nlohmann::json;
-
-int main()
+void print_help(){
+    cout << "-h Show this help.\n"; 
+    exit(0);
+}
+int hashify(string str){
+    int hashh=0;
+    for(char a:str){
+        hashh+=a;
+    }
+    return hashh;
+}
+int main(int argc, char** argv)
 {
-    string input;
 
+    string input;
     vector<string> keys;
     string penis;
+
     cout << "(c) Brickwall - 2025 DKM Community\n";
-    getline(cin,input);
+    if(argc>1){
+        for(int i = 1; i<=argc; i++){
+            switch(hashify(argv[i])){
+                case 149:
+                    print_help();                
+                    break;
+                default:
+                    input=argv[1];
+            }
+        }
+        input = argv[1];
+    }
+    else{
+        getline(cin,input);
+    }
 
     cout << input + "\n";
 
