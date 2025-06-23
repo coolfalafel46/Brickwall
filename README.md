@@ -4,7 +4,7 @@ Brickwall is a fast CLI tool that allows you to quickly edit JSON files, either 
 ##  Dependencies
 nlohmann/json
 ##  Todo
-[] Basic JSON editing
-[] GUI for editing JSON files
-[] Search with optional RegEx
-[] Presets for editing JSON files (editing various games' save files easier)
+- [ ] Basic JSON editing
+- [ ] GUI for editing JSON files
+- [ ] Search with optional RegEx
+- [ ] Presets for editing JSON files (editing various games' save files easier)
