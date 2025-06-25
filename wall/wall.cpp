@@ -3,6 +3,7 @@
 #include <fstream>
 #include <map>
 #include <vector>
+#include <stdlib.h>
 #include "includes/nlohmann/json.hpp"
 
 using namespace std;
@@ -21,11 +22,16 @@ int hashify(string str){
 int main(int argc, char** argv)
 {
 
-    string input;
+    string i_fpath;
     vector<string> keys;
-    string penis;
+    string i_jitem;
+    string i_command;
+    string i_newdata;
 
     cout << "(c) Brickwall - 2025 DKM Community\n";
+    cout << "\n- You can run Brickwall from the command line with the path to a JSON file as an argument\n(do not include quotes around the path):" <<R"("Brickwall.exe YourDrive:\Your\Path\To.json")" << "\n";
+    cout << "\n- You can also run Brickwall from the command line with the -h argument to see help information:" << R"("Brickwall.exe -h")" << "\n";
+    cout << "\n- If you run Brickwall without any command line arguments, \nit will start and immediately ask you to enter the file path manually: \nplease type the path without quotes right away." << "\n\n";
     if(argc>1){
         for(int i = 1; i<=argc; i++){
             switch(hashify(argv[i])){
@@ -33,23 +39,24 @@ int main(int argc, char** argv)
                     print_help();                
                     break;
                 default:
-                    input=argv[1];
+                    i_fpath=argv[i];
             }
         }
-        input = argv[1];
+        
+        cout << i_fpath + "\n";
     }
     else{
-        getline(cin,input);
+        std::getline(cin,i_fpath);
     }
 
-    cout << input + "\n";
+    
 
 
-    std::ifstream filepath(input);
+    std::ifstream filepath(i_fpath);
     json data = json::parse(filepath);
     
     map<string, int> jitems;
-
+    cout << "Found: " << "\n";
     for (auto& tempdata : data.items()) {
     
 
@@ -66,23 +73,37 @@ int main(int argc, char** argv)
         
     }
     
+    exit:
     for (auto it = jitems.begin(); it != jitems.end(); ++it)
     {
 
         cout << it->first << "(" << jitems[it->first] <<")" << "\n";
         
     }
-    getline(cin, penis);
-    if (jitems.find(penis) == jitems.end()) {
-        cout << "idi nahuy" << "\n";
+    std::getline(cin, i_jitem);
+    if (jitems.find(i_jitem) == jitems.end()) {
+        cout << "Something went wrong..." << "\n";
     }
     else {
-        cout << penis << "\n";
+        cout << i_jitem << "\n";
         for (auto& tempdata : data.items()) {
-            cout << "-> In object: " << tempdata.key() << " = "<< tempdata.value()[penis] << "\n";
+            cout << "-> In object: " << tempdata.key() << " = "<< tempdata.value()[i_jitem] << "\n";
         }
     }
 
+    cout << "\nOptions:\n- exit : Return to other items.\n- edit : Change the value of item in choosen group." << "\n";
+    std::getline(cin, i_command);
+
+    if (i_command == "exit") {
+        goto exit;
+    }
+
+    if (i_command == "edit") {
+        cout << "\nEnter new data:" << "\n";
+        std::getline(cin, i_newdata);
+
+
+    }
 
     return 0;
 }
