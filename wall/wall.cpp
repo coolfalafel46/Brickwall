@@ -8,6 +8,89 @@
 
 using namespace std;
 using json = nlohmann::json;
+
+class Brickwall {
+
+    json data;
+    map<string, int> jitems;
+    
+    
+
+    public:
+        Brickwall() {
+            
+        }
+        Brickwall(string i_fpath) {
+            std::ifstream filepath(i_fpath);
+            data = json::parse(filepath);
+
+        }
+
+        template <typename V>
+        vector<V> GetValue() {
+            vector<V> outvalues;
+
+            for (auto& tempdata : data.items()) {
+
+
+                for (auto& j : tempdata.value().items()) {
+
+                    if (jitems.find(j.key()) == jitems.end()) {
+                        jitems[j.key()] = 1;
+                    }
+                    else {
+                        jitems[j.key()]++;
+                    }
+
+                }
+
+            }
+
+            for (auto& tempdata : data.items()) {
+                outvalues.push_back(tempdata.value()[jitems]);
+            }
+
+            return outvalues;
+
+        }
+
+        vector<string> GetKey() {
+            vector<string> outkeys;
+            
+            for (auto& tempdata : data.items()) {
+                outkeys.push_back(tempdata.key());
+            }
+            
+            return outkeys;
+        }
+
+        void OutItems() {
+        
+            for (auto& tempdata : data.items()) {
+
+
+                for (auto& j : tempdata.value().items()) {
+
+                    if (jitems.find(j.key()) == jitems.end()) {
+                        jitems[j.key()] = 1;
+                    }
+                    else {
+                        jitems[j.key()]++;
+                    }
+
+                }
+
+            }
+
+            for (auto it = jitems.begin(); it != jitems.end(); ++it)
+            {
+
+                cout << it->first << "(" << jitems[it->first] << ")" << "\n";
+
+            }
+        }
+};
+
 void print_help(){
     cout << "-h Show this help.\n"; 
     exit(0);
@@ -21,7 +104,7 @@ int hashify(string str){
 }
 int main(int argc, char** argv)
 {
-
+    Brickwall brickwall;
     string i_fpath;
     vector<string> keys;
     string i_jitem;
@@ -52,50 +135,21 @@ int main(int argc, char** argv)
     
 
 
-    std::ifstream filepath(i_fpath);
-    json data = json::parse(filepath);
-    
-    map<string, int> jitems;
+    brickwall = Brickwall(i_fpath);
+
+
     cout << "Found: " << "\n";
-    for (auto& tempdata : data.items()) {
+    brickwall.OutItems();
     
 
-        for (auto& j : tempdata.value().items()) {
-        
-            if (jitems.find(j.key()) == jitems.end()) {
-                jitems[j.key()] =1;
-            }
-            else {
-                jitems[j.key()]++;
-            }
-            
-        }
-        
-    }
-    
-    exit:
-    for (auto it = jitems.begin(); it != jitems.end(); ++it)
-    {
-
-        cout << it->first << "(" << jitems[it->first] <<")" << "\n";
-        
-    }
     std::getline(cin, i_jitem);
-    if (jitems.find(i_jitem) == jitems.end()) {
-        cout << "Something went wrong..." << "\n";
-    }
-    else {
-        cout << i_jitem << "\n";
-        for (auto& tempdata : data.items()) {
-            cout << "-> In object: " << tempdata.key() << " = "<< tempdata.value()[i_jitem] << "\n";
-        }
-    }
+
 
     cout << "\nOptions:\n- exit : Return to other items.\n- edit : Change the value of item in choosen group." << "\n";
     std::getline(cin, i_command);
 
     if (i_command == "exit") {
-        goto exit;
+        
     }
 
     if (i_command == "edit") {
